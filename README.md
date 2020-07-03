@@ -42,8 +42,9 @@ Após ter validado a coleta dos dados do gupshup, execute o arquivo email_aviso.
 '''
 
 Para automatizar esse processo, utilizo o cronjob dos sistemas linux da seguinte forma.
-# rodar quando o minuto de cada hora for divisível por 15 (cada 15 minutos)
+
+\# rodar quando o minuto de cada hora for divisível por 15 (cada 15 minutos)
 */15 * * * * /home/lucas/gupshup.py saldo_check
 
-# rodar toda segunda feira às 09:00
+\# rodar toda segunda feira às 09:00
 0 9 * * 1 /home/lucas/gupshup.py saldo_atual
