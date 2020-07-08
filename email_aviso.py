@@ -33,11 +33,37 @@ my_email = email_conf.cgr[0]
 password = email_conf.cgr[1]
 email_destino = email_conf.lucas[0]
 
+conf = ConfigParser()
+config_file = 'config.ini'
+conf.read(config_file)
+email_enviado = conf['EMAIL']['email_enviado']
+
 saldo = consultar_saldo()
 
 if saldo: # consutar_saldo retorna o saldo, ou False
     if sys.argv[1] == "saldo_check":
         if saldo > 10:
+            # quando o saldo fica baixo, é enviado um email avisando.
+            # a variável "email_enviado" é usada pra controlar esse
+            # envio, para não ficar enviando constantemente email até
+            # que seja colocado crédito e o saldo voltar ao normal.
+            if email_enviado == 's': # sim
+                # resetar o email_enviado pra n[ão], e talvez enviar um email avisando o novo saldo
+                with open(config_file, 'w') as arquivo:
+                    conf['EMAIL']['email_enviado'] = 'n'
+                    conf.write(arquivo)
+                    # enviar o email aqui avisando o novo saldo
+            # se email_enviado não for 's[im]', é só sair e ignorar.
+            sys.exit()
+        # de cara é necessário conferir se o email já foi enviado,
+        # para não ficar enviando constantemente. além disso, tem que
+        # verificar em ambas condições (aqui e acima) para dar tempo
+        # do responsável colocar crédito e isso não afetar o
+        # funcionamento do script.
+        if email_enviado == 's':
+            # se já foi enviado, pode sair...
+            # caso contrário, só continuar o script pra criar a
+            # a mensagem e enviar o email.
             sys.exit()
         message = MIMEMultipart("alternative")
         message["Subject"] = "Saldo BAIXO no Gupshup"
@@ -72,6 +98,9 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         # de html é poder colocar itálico, negrito, etc.
         message.attach(part1)
         message.attach(part2)
+        with open(config_file, 'w') as arquivo:
+            conf['EMAIL']['email_enviado'] = 's'
+            conf.write(arquivo)
 
     elif sys.argv[1] == "saldo_atual":
         message = MIMEMultipart("alternative")
