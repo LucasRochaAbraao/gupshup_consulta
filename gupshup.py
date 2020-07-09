@@ -35,7 +35,7 @@ import config
 email_conf = config.Email
 my_email = email_conf.cgr[0]
 password = email_conf.cgr[1]
-email_destino = email_conf.adriana[0]
+email_destino = email_conf.lucas[0]
 
 conf = ConfigParser()
 config_file = 'config.ini'
