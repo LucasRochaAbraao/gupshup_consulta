@@ -13,12 +13,16 @@ um email toda segunda feira às 9h a informação.
 Author: Lucas Rocha Abraão  (   ) )
 Date: 02/07/2020             ) { (
 License: GNU GPLv3        ___|___)_
-                       .-'---------|
+version: 1.2           .-'---------|
                       ( C|/\/\/\/\/|
                        '-./\/\/\/\/|
                          '_________'
                           '-------'
 """
+# TODO
+# > enviar email quando detectar que houve uma recarga
+# > proper logging
+
 
 import sys
 import smtplib, ssl
@@ -31,7 +35,7 @@ import config
 email_conf = config.Email
 my_email = email_conf.cgr[0]
 password = email_conf.cgr[1]
-email_destino = email_conf.lucas[0]
+email_destino = email_conf.adriana[0]
 
 conf = ConfigParser()
 config_file = 'config.ini'
@@ -126,7 +130,7 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         part2 = MIMEText(html, "html")
         message.attach(part1)
         message.attach(part2)
-        
+
     # Cria um contexto SSL seguro
     contexto = ssl.create_default_context()
     porta = 465  # pro SSL
