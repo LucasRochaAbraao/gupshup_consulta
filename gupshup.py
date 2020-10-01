@@ -31,6 +31,7 @@ from email.mime.multipart import MIMEMultipart
 from configparser import ConfigParser
 from gupshup_api_saldo import consultar_saldo
 import config
+import textos
 
 email_conf = config.Email
 my_email = email_conf.cgr[0]
@@ -43,6 +44,7 @@ conf.read(config_file)
 email_enviado = conf['EMAIL']['email_enviado']
 
 saldo = consultar_saldo()
+respostas = textos.Resposta(saldo)
 
 if saldo: # consutar_saldo retorna o saldo, ou False
     if sys.argv[1] == "saldo_check":
@@ -75,20 +77,23 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         message["To"] = email_destino
 
         # Criar as versões texto e html da mensagem
-        text = f"""\
-        Foi detectado saldo baixo no Gupshup.
-        Saldo atual: {saldo}.
-        """
-        html = f"""\
-        <html>
-        <body>
-            <p>Olá,<br>
-            Foi detectado <i>saldo baixo</i> no Gupshup.<br>
-            Saldo atual: <b><mark>{saldo}</mark></b>
-            </p>
-        </body>
-        </html>
-        """
+        #text = f"""\
+        #Foi detectado saldo baixo no Gupshup.
+        #Saldo atual: {saldo}.
+        #"""
+        text = respostas.saldo_baixo
+
+        #html = f"""\
+        #<html>
+        #<body>
+        #    <p>Olá,<br>
+        #    Foi detectado <i>saldo baixo</i> no Gupshup.<br>
+        #    Saldo atual: <b><mark>{saldo}</mark></b>
+        #    </p>
+        #</body>
+        #</html>
+        #"""
+        html = respostas.saldo_baixo_html
 
         # Tornar esses em objetos plain/html MIMEText
         part1 = MIMEText(text, "plain", "utf-8")
@@ -113,18 +118,21 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         message["To"] = email_destino
 
         # Criar as versões texto e html da mensagem
-        text = f"""\
-        Atualmente o saldo no gupshup é de {saldo} mensagens.
-        """
-        html = f"""\
-        <html>
-        <body>
-            <p>Olá,<br>
-            Atualmente o saldo no gupshup é de <b><mark>{saldo}</mark></b> mensagens.
-            </p>
-        </body>
-        </html>
-        """
+        #text = f"""\
+        #Atualmente o saldo no gupshup é de {saldo} mensagens.
+        #"""
+        text = respostas.saldo_atual
+
+        #html = f"""\
+        #<html>
+        #<body>
+        #    <p>Olá,<br>
+        #    Atualmente o saldo no gupshup é de <b><mark>{saldo}</mark></b> mensagens.
+        #    </p>
+        #</body>
+        #</html>
+        #"""
+        html = respostas.saldo_atual_html
 
         part1 = MIMEText(text, "plain", "utf-8")
         part2 = MIMEText(html, "html")
