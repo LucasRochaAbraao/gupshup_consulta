@@ -33,13 +33,18 @@ from gupshup_api_saldo import consultar_saldo
 import config
 import textos
 
-email_conf = config.Email
-my_email = email_conf.cgr[0]
-password = email_conf.cgr[1]
-email_destino = email_conf.lucas[0]
+if len(sys.argv) < 2:
+    print("Argumento obrigatório:\
+        \n- saldo_check -> consulta o saldo atual e envia um email informando o saldo caso esteja baixo (<10).\
+        \n- saldo_atual -> consulta o saldo atual e envia por email.")
+    sys.exit()
+
+email_remetente = config.Email.cgr[0]
+password = config.Email.cgr[1]
+email_destino = config.Email.adriana[0]
 
 conf = ConfigParser()
-config_file = 'config.ini'
+config_file = 'config_verificar_envio.ini'
 conf.read(config_file)
 email_enviado = conf['EMAIL']['email_enviado']
 
@@ -77,22 +82,7 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         message["To"] = email_destino
 
         # Criar as versões texto e html da mensagem
-        #text = f"""\
-        #Foi detectado saldo baixo no Gupshup.
-        #Saldo atual: {saldo}.
-        #"""
         text = respostas.saldo_baixo
-
-        #html = f"""\
-        #<html>
-        #<body>
-        #    <p>Olá,<br>
-        #    Foi detectado <i>saldo baixo</i> no Gupshup.<br>
-        #    Saldo atual: <b><mark>{saldo}</mark></b>
-        #    </p>
-        #</body>
-        #</html>
-        #"""
         html = respostas.saldo_baixo_html
 
         # Tornar esses em objetos plain/html MIMEText
@@ -101,7 +91,7 @@ if saldo: # consutar_saldo retorna o saldo, ou False
 
         # Adiciona as partes HTML/plain-text à mensagem MIMEMultipart
         # obs: O client de email vai tentar renderizar a última primeiro,
-        # logo é importante colocar o html pro último. Se por um acaso
+        # logo é importante colocar o html por último. Se por um acaso
         # o client não tiver suporte para html (raro hoje em dia), ele
         # vai tentar ler a outra parte, que é texto normal. A vantágem
         # de html é poder colocar itálico, negrito, etc.
@@ -114,24 +104,11 @@ if saldo: # consutar_saldo retorna o saldo, ou False
     elif sys.argv[1] == "saldo_atual":
         message = MIMEMultipart("alternative")
         message["Subject"] = "Saldo ATUAL no Gupshup"
-        message["From"] = my_email
+        message["From"] = email_remetente
         message["To"] = email_destino
 
         # Criar as versões texto e html da mensagem
-        #text = f"""\
-        #Atualmente o saldo no gupshup é de {saldo} mensagens.
-        #"""
         text = respostas.saldo_atual
-
-        #html = f"""\
-        #<html>
-        #<body>
-        #    <p>Olá,<br>
-        #    Atualmente o saldo no gupshup é de <b><mark>{saldo}</mark></b> mensagens.
-        #    </p>
-        #</body>
-        #</html>
-        #"""
         html = respostas.saldo_atual_html
 
         part1 = MIMEText(text, "plain", "utf-8")
@@ -139,12 +116,17 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         message.attach(part1)
         message.attach(part2)
 
+    else:
+        print("Não entendi. Favor tentar novamente com um dos parâmetros obrigatórios: saldo_atual ou saldo_check")
+        sys.exit()
+
     # Cria um contexto SSL seguro
     contexto = ssl.create_default_context()
     porta = 465  # pro SSL
     with smtplib.SMTP_SSL("smtp.gmail.com", porta, context=contexto) as server:
-        server.login(my_email, password)
-        server.sendmail(my_email, email_destino, message.as_string())
+        server.login(email_remetente, password)
+        server.sendmail(email_remetente, email_destino, message.as_string())
 
 else:
-    print("Não houve retorno na consulta do saldo do gupshup")
+    print("Não houve retorno na consulta do saldo do gupshup. Entre em contato com o Lucas (lucasrabraao@gmail.com) para verificar.")
+

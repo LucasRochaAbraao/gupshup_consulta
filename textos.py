@@ -3,11 +3,11 @@ class Resposta:
     def __init__(self, saldo):
         self.saldo = saldo
 
-        saldo_baixo = f"""\
+        self.saldo_baixo = f"""\
                 Foi detectado saldo baixo no Gupshup.
                 Saldo atual: {self.saldo}."""
     
-        saldo_baixo_html = f"""\
+        self.saldo_baixo_html = f"""\
                 <html>
                 <body>
                     <p>Olá,<br>
@@ -17,10 +17,10 @@ class Resposta:
                 </body>
                 </html>"""
     
-        saldo_atual = f"""\
+        self.saldo_atual = f"""\
                 Atualmente o saldo no gupshup é de {saldo} mensagens."""
 
-        saldo_atual_html = f"""\
+        self.saldo_atual_html = f"""\
                 <html>
                 <body>
                     <p>Olá,<br>
