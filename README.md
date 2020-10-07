@@ -1,16 +1,18 @@
 # gupshup consultas
 
-Esse script realiza a consulta de saldo disponível no gupshup para informar através de email. Eu uso ele em um servidor linux com 2 cron jobs. O primeiro usa o argumento `saldo_check` para verificar a cada 15 minutos o saldo disponível, e enviar um email com
-mensagem personalizada caso esteja abaixo da média. O outro usa o argumento `saldo_atual` para enviar um email toda segunda feira às 9h a informação.
+Esse script realiza a consulta de saldo disponível no gupshup para notificação através de email. Eu uso ele em um servidor linux com 2 cron jobs. O primeiro usa o argumento `saldo_check` para verificar a cada 15 minutos o saldo disponível, e enviar um email com mensagem personalizada caso esteja abaixo da média. O outro usa o argumento `saldo_atual` para enviar toda segunda-feira às 9h a informação por e-mail.
 
 Para instalar, configurar e executar o script, siga as instruções abaixo.
 
 ## instalação
-Primeiro é necessário instalar o pacote de gerenciamento de ambiente e pacotes `pipenv`, para um melhor gerenciamento dos seus projetos.
+Primeiro é necessário instalar, configurar e ativar um ambiente virtual, para um melhor gerenciamento do projeto.
 ```
-pip3 install pipenv
+sudo apt install python3-venv
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install --upgrade pip
 ```
-Em seguida, instale o pacote `requests`.
+Em seguida, instale o pacote `requests`, usado para coletar dados da API.
 ```
 pipenv install requests
 ```
@@ -26,7 +28,7 @@ Renomeie o `config_sample.py` para `config.py` e preencha com as informações d
 
 No meu cenário, utilizo uma conta do gmail para enviar os e-mails. Para autenticar pelo gmail, foi necessário habilitar a opção de login "menos segura" para aplicativos, nesse [link](https://myaccount.google.com/lesssecureapps). *Eu recomendo muito criar uma conta apenas para o envio desses e-mails*, para não perder uma conta com dados pessoais por ter que utilizar uma opção de autenticação menos segura.
 
-No email_aviso.py, coloque as informações corretas nas variáveis de configuração dos e-mails, de acordo com o arquivo config.py.
+No arquivo gupshup.py, coloque as informações corretas nas variáveis de configuração dos e-mails, de acordo com o arquivo config.py.
 
 
 ## Execução
@@ -36,10 +38,10 @@ Primeiro teste se o `gupshup_api_saldo.py` está coletando os dados corretamente
 python3 gupshup_api_saldo.py
 ```
 
-Após ter validado a coleta dos dados do gupshup, execute o arquivo email_aviso.py com um dos argumentos `saldo_check` ou `saldo_atual`, da seguinte forma:
+Após ter validado a coleta dos dados do gupshup, execute o arquivo gupshup.py com um dos argumentos `saldo_check` ou `saldo_atual`, da seguinte forma:
 ```
-./email_aviso.py saldo_atual
-./email_aviso.py saldo_check
+./gupshup.py saldo_atual
+./gupshup.py saldo_check
 ```
 
 Para automatizar esse processo, utilizo o cronjob dos sistemas linux da seguinte forma.
@@ -52,3 +54,4 @@ Para automatizar esse processo, utilizo o cronjob dos sistemas linux da seguinte
 # rodar toda segunda feira às 09:00
 0 9 * * 1 /home/lucas/gupshup.py saldo_atual
 ```
+
