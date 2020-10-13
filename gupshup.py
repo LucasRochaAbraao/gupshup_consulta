@@ -46,7 +46,7 @@ email_destino = config.Email.adriana[0]
 conf = ConfigParser()
 config_file = 'config_verificar_envio.ini'
 conf.read(config_file)
-email_enviado = conf['EMAIL']['email_enviado']
+email_enviado = conf['EMAIL']['email_saldo_baixo_enviado']
 
 saldo = consultar_saldo()
 respostas = textos.Resposta(saldo)
@@ -61,7 +61,7 @@ if saldo: # consutar_saldo retorna o saldo, ou False
             if email_enviado == 's': # sim
                 # resetar o email_enviado pra n[ão], e talvez enviar um email avisando o novo saldo
                 with open(config_file, 'w') as arquivo:
-                    conf['EMAIL']['email_enviado'] = 'n'
+                    conf['EMAIL']['email_saldo_baixo_enviado'] = 'n'
                     conf.write(arquivo)
                     # enviar o email aqui avisando o novo saldo
             # se email_enviado não for 's[im]', é só sair e ignorar.
@@ -98,7 +98,7 @@ if saldo: # consutar_saldo retorna o saldo, ou False
         message.attach(part1)
         message.attach(part2)
         with open(config_file, 'w') as arquivo:
-            conf['EMAIL']['email_enviado'] = 's'
+            conf['EMAIL']['email_saldo_baixo_enviado'] = 's'
             conf.write(arquivo)
 
     elif sys.argv[1] == "saldo_atual":
