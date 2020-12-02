@@ -22,15 +22,19 @@ version: 1.2           .-'---------|
 # TODO
 # > enviar email quando detectar que houve uma recarga
 # > proper logging
+# > move ini files to yaml
 
-
+import os
 import sys
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from configparser import ConfigParser
+from ruamel.yaml import YAML
+
+BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_PATH)
 from gupshup_api_saldo import consultar_saldo
-sys.path.append('/home/lucas/projects/gupshup_consulta')
 import config_gupshup as config
 import textos_gupshup as textos
 
@@ -44,14 +48,18 @@ email_remetente = config.Email.cgr[0]
 password = config.Email.cgr[1]
 email_destino = config.Email.lucas[0]
 
-conf = ConfigParser()
-config_file = '/home/lucas/projects/gupshup_consulta/config_verificar_envio.ini'
-conf.read(config_file)
-email_enviado = conf['EMAIL']['email_saldo_baixo_enviado']
+yaml = YAML(typ='safe')
+config_file = f'{BASE_PATH}/config_verificar_envio.yaml'
+with open(config_file, 'r') as cfg:
+    yaml_cfg = yaml.load(config_file)
+email_enviado = yaml_cfg['email']['email_saldo_baixo_enviado']
 
 saldo = consultar_saldo()
 respostas = textos.Resposta(saldo)
-
+print(saldo)
+print(respostas)
+print(yaml_cfg, email_enviado)
+exit()
 if saldo: # consutar_saldo retorna o saldo, ou False
     if sys.argv[1] == "saldo_check":
         if saldo > 10:
@@ -63,8 +71,8 @@ if saldo: # consutar_saldo retorna o saldo, ou False
             if email_enviado == 's': # sim
                 # resetar o email_enviado pra n[ão], e talvez enviar um email avisando o novo saldo
                 with open(config_file, 'w') as arquivo:
-                    conf['EMAIL']['email_saldo_baixo_enviado'] = 'n'
-                    conf.write(arquivo)
+                    enviado = ['EMAIL']['email_saldo_baixo_enviado'] = 'n'
+                    yaml.dump(enviado, arquivo)
                     # enviar o email aqui avisando o novo saldo
             # se email_enviado não for 's[im]', é só sair e ignorar.
             sys.exit()
