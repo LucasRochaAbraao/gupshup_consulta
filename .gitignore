@@ -1,4 +1,4 @@
 .vscode
-config.py
+config_gupshup.py
 __pycache__/
 venv/

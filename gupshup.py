@@ -30,8 +30,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from configparser import ConfigParser
 from gupshup_api_saldo import consultar_saldo
-import config
-import textos
+sys.path.append('/home/lucas/projects/gupshup_consulta')
+import config_gupshup as config
+import textos_gupshup as textos
 
 if len(sys.argv) < 2:
     print("Argumento obrigatório:\
@@ -41,10 +42,10 @@ if len(sys.argv) < 2:
 
 email_remetente = config.Email.cgr[0]
 password = config.Email.cgr[1]
-email_destino = config.Email.adriana[0]
+email_destino = config.Email.lucas[0]
 
 conf = ConfigParser()
-config_file = 'config_verificar_envio.ini'
+config_file = '/home/lucas/projects/gupshup_consulta/config_verificar_envio.ini'
 conf.read(config_file)
 email_enviado = conf['EMAIL']['email_saldo_baixo_enviado']
 
@@ -54,6 +55,7 @@ respostas = textos.Resposta(saldo)
 if saldo: # consutar_saldo retorna o saldo, ou False
     if sys.argv[1] == "saldo_check":
         if saldo > 10:
+            print(f"saldo suficiente: {saldo:2f}")
             # quando o saldo fica baixo, é enviado um email avisando.
             # a variável "email_enviado" é usada pra controlar esse
             # envio, para não ficar enviando constantemente email até
@@ -66,6 +68,7 @@ if saldo: # consutar_saldo retorna o saldo, ou False
                     # enviar o email aqui avisando o novo saldo
             # se email_enviado não for 's[im]', é só sair e ignorar.
             sys.exit()
+        print(f"saldo baixo: {saldo:2f}")
         # de cara é necessário conferir se o email já foi enviado,
         # para não ficar enviando constantemente. além disso, tem que
         # verificar em ambas condições (aqui e acima) para dar tempo

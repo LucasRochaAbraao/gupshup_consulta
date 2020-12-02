@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
+import sys
 import requests
-import config
+sys.path.append('/home/lucas/projects/gupshup_consulta')
+import config_gupshup as config
 
 def consultar_saldo():
     response = requests.get('https://api.gupshup.io/sm/api/v2/wallet/balance', headers={'apikey': config.GupshupSaldo.apikey})
