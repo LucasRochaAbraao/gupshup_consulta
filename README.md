@@ -55,3 +55,16 @@ Para automatizar esse processo, utilizo o cronjob dos sistemas linux da seguinte
 0 9 * * 1 /home/lucas/gupshup.py saldo_atual
 ```
 
+
+## Criar executável para interface gráfica
+
+Para criar um arquivo executável para sua estação de trabalho, execute os seguintes comandos dentro do diretório `.../Gupshup/gui/`:
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r ../requirements.txt
+pip install PyInstaller eel
+python -m eel gupshup_saldo_gui.py web --onefile --noconsole
+```
+
+Ao finalizar, haverá um binário executável no diretório `.../Gupshup/gui/dist/` chamado `gupshup_saldo_gui[.exe]`, que pode ser distribuído para outros PCs de mesmo Sistema Operacional e arquitetura.

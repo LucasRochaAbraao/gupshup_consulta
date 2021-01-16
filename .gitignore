@@ -5,6 +5,6 @@ venv/
 gui/__pycache__
 gui/build
 gui/dist
-gui/pygui.spec
+gui/gupshup_saldo_gui.spec
 gui/config_gupshup
 gui/venv
