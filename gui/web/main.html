@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>GupShup</title>
+    <meta name="Interface gráfica para saldo gupshup" content="Consulta saldo do gupshup">
+    <meta author="Lucas Rocha Abraão">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="img/money_graph.png">
+
+    <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
+    <script type="text/javascript" src="/eel.js"></script>
+  </head>
+
+  <body>
+    <h1>Saldo Gupshup</h1>
+    <div id="cont">
+      <p><span id="saldo"></span></p>
+      <button id="refresh" onclick="saldo()">Consultar</button>
+    </div>
+    <script type="text/javascript">
+      async function saldo(){
+        let saldo = await eel.consultar_saldo()();  // Call a Python function
+        console.log(saldo)
+        document.getElementById('saldo').innerHTML = saldo;
+      };
+      saldo();
+    </script>
+</body>
+</html>

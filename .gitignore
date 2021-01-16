@@ -2,3 +2,9 @@
 config_gupshup.py
 __pycache__/
 venv/
+gui/__pycache__
+gui/build
+gui/dist
+gui/pygui.spec
+gui/config_gupshup
+gui/venv
