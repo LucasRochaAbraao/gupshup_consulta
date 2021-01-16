@@ -134,10 +134,10 @@ def main(modo: str, destino: str = ""):
             print("Não entendi. Favor tentar novamente com um dos parâmetros obrigatórios: saldo_atual ou saldo_check")
             sys.exit()
 
-        # Cria um contexto SSL seguro
-        contexto = ssl.create_default_context()
+        # Cria um contexto SSL
+        contexto = ssl._create_unverified_context()
         porta = 465  # pro SSL
-        with smtplib.SMTP_SSL("smtp.gmail.com", porta, context=contexto) as server:
+        with smtplib.SMTP_SSL(host="smtp.quick.com.br", port=porta, context=contexto) as server:
             server.login(email_remetente, password)
             server.sendmail(email_remetente, email_destino, message.as_string())
             print(f"Email enviado de {email_remetente} para {email_destino}")
