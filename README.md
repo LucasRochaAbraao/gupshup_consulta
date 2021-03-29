@@ -12,9 +12,9 @@ python3 -m venv venv
 source venv/bin/activate
 python -m pip install --upgrade pip
 ```
-Em seguida, instale o pacote `requests`, usado para coletar dados da API.
+Em seguida, instale o pacote `requests` (e algumas outra dependencias), usado para coletar dados da API.
 ```
-pipenv install requests
+pip install -r requirements.txt
 ```
 Para finalizar, dê permissão de execução ao script principal.
 ```
@@ -24,9 +24,11 @@ sudo chmod +x email_aviso.py
 
 ## Configuração
 
-Renomeie o `config_sample.py` para `config.py` e preencha com as informações de credenciais do e-mail. Coloque também o `api_token` fornecido na plataforma gupshup.
+Renomeie o `config_sample.py` para `config_gupshup.py` e preencha com as informações de credenciais do e-mail. Coloque também o `api_token` fornecido na plataforma gupshup.
 
-No meu cenário, utilizo uma conta do gmail para enviar os e-mails. Para autenticar pelo gmail, foi necessário habilitar a opção de login "menos segura" para aplicativos, nesse [link](https://myaccount.google.com/lesssecureapps). *Eu recomendo muito criar uma conta apenas para o envio desses e-mails*, para não perder uma conta com dados pessoais por ter que utilizar uma opção de autenticação menos segura.
+Antigamente utilizava uma conta do gmail para enviar os e-mails. Para autenticar pelo gmail, foi necessário habilitar a opção de login "menos segura" para aplicativos, nesse [link](https://myaccount.google.com/lesssecureapps). *Eu recomendo muito criar uma conta apenas para o envio desses e-mails*, para não perder uma conta com dados pessoais por ter que utilizar uma opção de autenticação menos segura.
+
+Mas como isso não é seguro, o próprio google as vezes desabilita essa função menos segura, e isso causa a parte de envio de emails no script a parar de funcionar. Portanto, como temos um domínio próprio, criei uma conta de email apenas para essa função.
 
 No arquivo gupshup.py, coloque as informações corretas nas variáveis de configuração dos e-mails, de acordo com o arquivo config.py.
 
